@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  argocd/app-name: apr8-objdet
+  janus-idp.io/tekton: apr8-objdet
+  backstage.io/kubernetes-id: apr8-objdet
+  backstage.io/kubernetes-namespace: rhdh-app
+  app.kubernetes.io/part-of: apr8-objdet
+resources:
+  - initialize-namespace/
+  - deployment-model-server.yaml
+  - service-model-server.yaml
+  - deployment.yaml
+  - route.yaml
+  - service.yaml
+  - model-config.yaml

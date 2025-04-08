@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: apr8-objdet
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: apr8-objdet
+  name: apr8-objdet
+spec:
+  ports:
+    - port: 8501
+      protocol: TCP
+      targetPort: 8501
+  selector:
+    app.kubernetes.io/instance: apr8-objdet

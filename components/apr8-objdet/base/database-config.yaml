@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apr8-objdet-database-config
+data:
+  VECTORDB_HOST: "apr8-objdet-database"
+  VECTORDB_PORT: ""

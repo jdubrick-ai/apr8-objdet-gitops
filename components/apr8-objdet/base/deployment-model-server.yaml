@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: apr8-objdet-model-server
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: apr8-objdet-model-server
+    app.kubernetes.io/part-of: apr8-objdet
+  name: apr8-objdet-model-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: apr8-objdet-model-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: apr8-objdet-model-server
+    spec:
+      initContainers:
+        - name: model-file
+          image: quay.io/redhat-ai-dev/detr-resnet-101:latest
+          command: ['cp', '-R', '/model/detr-resnet-101', '/shared/detr-resnet-101']
+          volumeMounts:
+            - name: model-file
+              mountPath: /shared
+      containers:
+        - env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "8000"
+            - name: MODEL_PATH
+              value: /model/detr-resnet-101
+            - name: CHAT_FORMAT
+              value: openchat
+          image: quay.io/redhat-ai-dev/object_detection_python:latest
+          volumeMounts:
+            - name: model-file
+              mountPath: /model
+          name: app-model-service
+          ports:
+            - containerPort: 8000
+          securityContext:
+            runAsNonRoot: true
+      volumes:
+        - name: model-file
+          emptyDir: {}

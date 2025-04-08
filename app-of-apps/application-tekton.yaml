@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apr8-objdet-app-tekton
+  namespace: ai-rhdh
+  finalizers: ["resources-finalizer.argocd.argoproj.io"]
+spec:
+  project: default
+  source:
+    path: ./components/apr8-objdet/overlays/tekton
+    repoURL: https://github.com/jdubrick-ai/apr8-objdet-gitops.git
+    targetRevision: main
+  destination:
+    namespace: rhdh-app
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        argocd.argoproj.io/managed-by: ai-rhdh
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
